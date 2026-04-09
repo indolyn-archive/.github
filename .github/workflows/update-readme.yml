@@ -1,0 +1,61 @@
+name: Update README
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 3 * * 1"
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Update repository list
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const owner = context.repo.owner;
+            const repos = await github.paginate(github.rest.repos.listForOrg, {
+              org: owner,
+              type: 'public',
+              per_page: 100,
+            });
+
+            const lines = repos
+              .filter(repo => !repo.fork)
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map(repo => `- [${repo.name}](${repo.html_url}) - ${repo.description || 'No description'}`);
+
+            const readmePath = path.join(process.env.GITHUB_WORKSPACE, 'README.md');
+            let readme = fs.readFileSync(readmePath, 'utf8');
+            const start = '<!-- public-repos-start -->';
+            const end = '<!-- public-repos-end -->';
+            const section = lines.length ? lines.join('\n') : '- 暂无公开仓库';
+            const updated = readme.replace(
+              new RegExp(`${start}[\\s\\S]*?${end}`),
+              `${start}\n${section}\n${end}`
+            );
+
+            if (updated !== readme) {
+              fs.writeFileSync(readmePath, updated);
+            }
+
+      - name: Commit changes
+        run: |
+          if git diff --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "docs: update public repository list"
+          git push
