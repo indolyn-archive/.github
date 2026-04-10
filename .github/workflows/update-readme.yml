@@ -34,7 +34,7 @@ jobs:
               .sort((a, b) => a.name.localeCompare(b.name))
               .map(repo => `- [${repo.name}](${repo.html_url}) - ${repo.description || 'No description'}`);
 
-            const readmePath = path.join(process.env.GITHUB_WORKSPACE, 'README.md');
+            const readmePath = path.join(process.env.GITHUB_WORKSPACE, 'profile', 'README.md');
             let readme = fs.readFileSync(readmePath, 'utf8');
             const start = '<!-- public-repos-start -->';
             const end = '<!-- public-repos-end -->';
@@ -56,6 +56,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add README.md
+          git add profile/README.md
           git commit -m "docs: update public repository list"
           git push
