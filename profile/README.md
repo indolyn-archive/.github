@@ -27,6 +27,7 @@
 - [MyPetStore](https://github.com/indolyn-archive/MyPetStore) - JavaWeb课程实验
 - [Qt-Brotato](https://github.com/indolyn-archive/Qt-Brotato) - 这是一个用Qt的游戏，实现Steam中的Brotato。这是一个实训项目，作者水平太次，见谅。
 - [sdolp](https://github.com/indolyn-archive/sdolp) - 一个从头用 Java 构建的数据库系统，集成了 SQL 编译器、基于页式存储的存储引擎，并支持 ARIES 风格的事务恢复。
+- [smart-metric](https://github.com/indolyn-archive/smart-metric) - No description
 <!-- public-repos-end -->
 
 ## 说明
